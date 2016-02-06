@@ -55,6 +55,9 @@ public class LoginManager extends HttpServlet {
             if (count == 1) {
                 out.println("login successful");
                 session.setAttribute("loginstatus", "true");
+                session.setAttribute("username", emailid);
+                RequestDispatcher rd=request.getRequestDispatcher("gamecontainer.jsp");
+                rd.forward(request, response);
             } else {
                 out.print("login failure..");
                 session.setAttribute("loginstatus", "true");
