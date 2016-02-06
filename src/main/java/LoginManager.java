@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.utils;
 
+import com.utils.DbConnection;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kislay
  */
+@WebServlet(name = "LoginManagerMain", urlPatterns = {"/LoginManagerMain"})
 public class LoginManager extends HttpServlet {
 
     /**
@@ -38,7 +38,8 @@ public class LoginManager extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         Connection con = null;
         PrintWriter out = response.getWriter();
-        try {
+        try { 
+            
             /* TODO output your page here. You may use following sample code. */
             String emailid = request.getParameter("form-username");
             String password = request.getParameter("form-password");
