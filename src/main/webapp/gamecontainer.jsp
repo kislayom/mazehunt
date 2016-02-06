@@ -42,7 +42,8 @@
 
             function load(name) {
                 
-                $("#mainbox").load(name + '.jsp').slideDown();
+                $("#mainbox").load(name + '.jsp');
+                $("#mainbox").fadeIn('3000');
             }
 
         </script> 

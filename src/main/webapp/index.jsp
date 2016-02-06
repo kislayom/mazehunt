@@ -44,6 +44,7 @@
         
         <img class="img-rounded" src="images/Impetus.PNG">
         <div class="top-content">
+           
             <div class="alert-warning">
                 <%
                     String error=request.getParameter("error");
