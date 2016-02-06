@@ -8,11 +8,14 @@ package com.impetus.registration;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.utils.DbConnection;
 
 public class ProcessRegistration extends HttpServlet {
 
@@ -39,6 +42,8 @@ public class ProcessRegistration extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String emailid = request.getParameter("form-email");
             System.out.println("emailid>>>>>>>>>>>>>>>>>>>>>>"+emailid);
+            
+            
          
             out.println(emailid);
         } catch (Exception exc) {
@@ -46,6 +51,11 @@ public class ProcessRegistration extends HttpServlet {
         } finally {
            
         }
+    }
+    
+    private void emailValidation() throws ClassNotFoundException, SQLException{
+    	Connection con = null;
+    	con = DbConnection.getConnection();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

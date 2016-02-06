@@ -6,7 +6,7 @@
     </servlet>
     <servlet>
         <servlet-name>LoginManager</servlet-name>
-        <servlet-class>LoginManager</servlet-class>
+        <servlet-class>com.impetus.login.LoginManager</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ProcessRegistration</servlet-name>
