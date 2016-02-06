@@ -38,7 +38,20 @@
 
     </head>
     <body>
-        <div class="top-content">Welcome <%= session.getAttribute("username") %></div>
-        
+        <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
+        <div class="inner-bg">
+           
+                <div class="row">
+                    <div class="col-md-2 ">
+                    <!-- 
+                    -->  
+                    <%@include file="menu.jsp" %> 
+                    </div>
+                    <div class="col-md-10" style="min-height: 500px;">
+                    
+                    </div>
+                </div>
+            
+        </div>
     </body>
 </html>
