@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.mail.MessagingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +23,7 @@ import com.utils.SendMail;
 
 public class ProcessRegistration extends HttpServlet {
 	MajeHuntDao majehuntdao =  new MajeHuntDao();
-//	ProcessRegistration processregistration = new ProcessRegistration();
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -46,17 +44,26 @@ public class ProcessRegistration extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String emailid = request.getParameter("form-email");
             System.out.println("emailid>>>>>>>>>>>>>>>>>>>>>>"+emailid);
-            if(emailValidation(emailid)){
+            String message = emailValidation(emailid);
+            if("success".equalsIgnoreCase(message)){
             	String password = RandomStringUtilsComm.getRandomPassword();
             	System.out.println("password---"+password);
             	flag = majehuntdao.doRegistartion(emailid,password);
+            	System.out.println("flag---"+flag);
             	if(flag){
+            		out.println(emailid);
             		sendmailToUser(emailid,password);
+            		RequestDispatcher rd=request.getRequestDispatcher("index.jsp?success=Registration Sucessfully.Kindly check mail for login credentials");
+                    rd.forward(request, response);
+            	} else {
+            		RequestDispatcher rd=request.getRequestDispatcher("index.jsp?error=issue with registarion,Please try after some time");
+                    rd.forward(request, response);
             	}
-            }
-            
-         
-            out.println(emailid);
+            } else {
+      		  out.println(emailid);
+      		  RequestDispatcher rd=request.getRequestDispatcher("index.jsp?error="+message+"");
+              rd.forward(request, response);
+      	}
         } catch (Exception exc) {
             out.println(exc.toString());
         } finally {
@@ -64,29 +71,40 @@ public class ProcessRegistration extends HttpServlet {
         }
     }
     
-    private  boolean emailValidation(String emailid) throws ClassNotFoundException, SQLException{
-    	boolean flag = false;
+    private  String emailValidation(String emailid) throws ClassNotFoundException, SQLException{
+    	String message = "";
     	if(EmailValidator.validateEmail(emailid)){
     		System.out.println("emailValidation");
-    		flag =majehuntdao.checkEmailId(emailid);
-    		System.out.println("flag---"+flag);
+    		if(majehuntdao.checkEmailId(emailid)){
+    			message = "success";
+    	  }  else {
+    		  message = "EmailId is already exist in our system";  
+    	  }
+    	}else {
+    		message = "Kindly provide valid email address,Please check it must belong to Impetus";
     	}
-		return flag;
+		return message;
     	
     }
     
     private void sendmailToUser(String emailid, String password) throws MessagingException{
     	String subject = "Mazehunt registration";
-    	String message = "Thanks for registarion, you can use below credentails to start game" +
-    			" UserName = " + emailid + "" +
-    			" Password : " + password + "";
+    	String message = "<html>\n <body>\n" +
+        "\n" +
+        " Thanks for registration <br>" +
+        " you can use below credentials to start game <br><br><br>" +
+        "<b>UserName</b> :: " + emailid + " <br>" +
+        "<b>Password</b> :: " + password + " <br><br><br>" +
+        " Thanks</b> <br>" +
+        " MazeHunt Team</b>" +
+        "</body>\n" +
+        "</html>";
     	String sentFrom =  "mazehunt@gmail.com";
     	String recipient[] = {emailid};
     	SendMail.sendMail(
                 recipient, subject, message, sentFrom);
     }
       
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

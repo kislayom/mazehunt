@@ -53,6 +53,14 @@
                     }
                 %>
             </div>
+             <div class="alert-warning">
+                <%
+                    String success=request.getParameter("success");
+                    if(success!=null){
+                        out.write(" <div class=\"alert-success\">"+success+"</div>");
+                    }
+                %>
+            </div>
 
             <div class="inner-bg">
                 <div class="container">
