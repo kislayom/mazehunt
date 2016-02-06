@@ -38,20 +38,31 @@
 
     </head>
     <body>
+        <script type="text/javascript">
+
+            function load(name) {
+                
+                $("#mainbox").load(name + '.jsp').slideDown();
+            }
+
+        </script> 
         <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
         <div class="inner-bg">
-           
-                <div class="row">
-                    <div class="col-md-2 ">
+
+            <div class="row">
+                <div class="col-md-2 ">
                     <!-- 
                     -->  
                     <%@include file="menu.jsp" %> 
-                    </div>
-                    <div class="col-md-10" style="min-height: 500px;">
-                    
-                    </div>
                 </div>
-            
+                <div class="col-md-10" style="min-height: 500px;" id="mainbox">
+
+                </div>
+            </div>
+
         </div>
+        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/scripts.js"></script>
     </body>
 </html>
