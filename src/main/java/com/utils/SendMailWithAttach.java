@@ -75,7 +75,6 @@ public class SendMailWithAttach {
      */
     public static void main(String args[]) {
         String recipient[] = {"pathak.amit783@gmail.com","amit.pathak@impetus.co.in"};
-        String CCrecipient[] = {};
         String sentfrom = "mazehunt@gmail.com";
         String subject = "ffffffffffffffffffff";
         String message = "hello PFA";
