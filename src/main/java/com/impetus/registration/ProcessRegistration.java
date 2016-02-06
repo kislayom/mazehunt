@@ -7,18 +7,22 @@ package com.impetus.registration;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.utils.DbConnection;
+import com.impetus.DbPlan.MajeHuntDao;
+import com.utils.EmailValidator;
+import com.utils.RandomStringUtilsComm;
+import com.utils.SendMail;
 
 public class ProcessRegistration extends HttpServlet {
-
+	MajeHuntDao majehuntdao =  new MajeHuntDao();
+//	ProcessRegistration processregistration = new ProcessRegistration();
     /**
 	 * 
 	 */
@@ -36,13 +40,20 @@ public class ProcessRegistration extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Connection con = null;
         PrintWriter out = response.getWriter();
+        boolean flag = false;
         try {
             /* TODO output your page here. You may use following sample code. */
             String emailid = request.getParameter("form-email");
             System.out.println("emailid>>>>>>>>>>>>>>>>>>>>>>"+emailid);
-            
+            if(emailValidation(emailid)){
+            	String password = RandomStringUtilsComm.getRandomPassword();
+            	System.out.println("password---"+password);
+            	flag = majehuntdao.doRegistartion(emailid,password);
+            	if(flag){
+            		sendmailToUser(emailid,password);
+            	}
+            }
             
          
             out.println(emailid);
@@ -53,11 +64,28 @@ public class ProcessRegistration extends HttpServlet {
         }
     }
     
-    private void emailValidation() throws ClassNotFoundException, SQLException{
-    	Connection con = null;
-    	con = DbConnection.getConnection();
+    private  boolean emailValidation(String emailid) throws ClassNotFoundException, SQLException{
+    	boolean flag = false;
+    	if(EmailValidator.validateEmail(emailid)){
+    		System.out.println("emailValidation");
+    		flag =majehuntdao.checkEmailId(emailid);
+    		System.out.println("flag---"+flag);
+    	}
+		return flag;
+    	
     }
-
+    
+    private void sendmailToUser(String emailid, String password) throws MessagingException{
+    	String subject = "Mazehunt registration";
+    	String message = "Thanks for registarion, you can use below credentails to start game" +
+    			" UserName = " + emailid + "" +
+    			" Password : " + password + "";
+    	String sentFrom =  "mazehunt@gmail.com";
+    	String recipient[] = {emailid};
+    	SendMail.sendMail(
+                recipient, subject, message, sentFrom);
+    }
+      
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

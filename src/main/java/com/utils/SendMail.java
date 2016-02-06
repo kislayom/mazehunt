@@ -19,7 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-public class SendMailWithAttach {
+public class SendMail {
 
     private static String SMTP_HOST_NAME = "smtp.gmail.com";
     private static String SMTP_PORT = "587";
@@ -74,7 +74,7 @@ public class SendMailWithAttach {
      *
      */
     public static void main(String args[]) {
-        String recipient[] = {"pathak.amit783@gmail.com","amit.pathak@impetus.co.in"};
+        String[] recipient = {"pathak.amit783@gmail.com"};
         String sentfrom = "mazehunt@gmail.com";
         String subject = "ffffffffffffffffffff";
         String message = "hello PFA";

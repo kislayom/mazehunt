@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class DbConnection {
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://192.168.1.102/mazehunt";
+    static final String DB_URL = "jdbc:mysql://192.168.1.102:3306/mazehunt";
 
     //  Database credentials
     static final String USER = "amit";
@@ -30,5 +30,8 @@ public class DbConnection {
         System.out.println("Connecting to database...");
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
         return conn;
+    }
+    public static void main(String args[]) throws ClassNotFoundException, SQLException{
+    	System.out.println(DbConnection.getConnection());
     }
 }
