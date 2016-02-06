@@ -1,0 +1,8 @@
+com/utils/SendMail$1.class
+com/utils/RandomStringUtilsComm.class
+com/utils/DbConnection.class
+com/impetus/login/LoginManager.class
+com/utils/EmailValidator.class
+com/impetus/DbPlan/MajeHuntDao.class
+com/utils/SendMail.class
+com/impetus/registration/ProcessRegistration.class
