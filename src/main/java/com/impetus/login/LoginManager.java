@@ -12,11 +12,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,6 +41,7 @@ public class LoginManager extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         Connection con = null;
         PrintWriter out = response.getWriter();
+        HttpSession session=request.getSession(true);
         try { 
             
             /* TODO output your page here. You may use following sample code. */
@@ -51,8 +54,12 @@ public class LoginManager extends HttpServlet {
             int count = rs.getInt(1);
             if (count == 1) {
                 out.println("login successful");
+                session.setAttribute("loginstatus", "true");
             } else {
-                out.print("login failure");
+                out.print("login failure..");
+                session.setAttribute("loginstatus", "true");
+                RequestDispatcher rd=request.getRequestDispatcher("index.jsp?error=Login Failed !! Please try again.");
+                rd.forward(request, response);
             }
             out.println(emailid);
         } catch (ClassNotFoundException | SQLException exc) {
