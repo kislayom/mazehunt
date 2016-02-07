@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 
 <div class="img-circle">
-    <div class="description">
+    <div class="description form-box">
         <h1>GuideLine to reach the goal.</h1>
         <li>
             <ul>
