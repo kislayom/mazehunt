@@ -7,15 +7,33 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
-<div class="img-circle">
-    <div class="description form-box">
-        <h1>GuideLine to reach the goal.</h1>
-        <li>
-            <ul>
-                We have a maze to solve guys. 
-            </ul>
-        </li>
+<br>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>We don't have rules just hunt on GOLD.... but limelight is as: </strong></div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="images/fMSZhTq.png" width="200">
+                </div>
+                <div class="col-md-9">
+                    <div class="panel-danger text-left">
+                        <p>
+                            In short we have to cross the maze.. As you know a maze may have dead ends but clues may always be there for right choice.. rest if you love hacking cross the maze in one shot, most welcome we dont have rules..
+                        <br><br>Start playing explore yourself we also don't know the problem..
+                        <br>
+                        We need you <strong>Sherlock</strong> :D
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
     </div>
-    
+
 </div>
 

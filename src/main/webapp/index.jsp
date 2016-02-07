@@ -38,11 +38,11 @@
 
     </head>
 
-    <body>
+    <body style="background-image: url('images/sherlock_holmes_png_by_hestiac-d78wayq.png'); background-repeat: no-repeat;">
 
         <!-- Top content -->
         
-        <img class="img-rounded" src="images/Impetus.PNG">
+        <img class="img-rounded" src="images/logo.png">
         <div class="top-content">
            
             <div class="alert-warning">
