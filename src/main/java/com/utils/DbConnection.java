@@ -33,5 +33,6 @@ public class DbConnection {
     }
     public static void main(String args[]) throws ClassNotFoundException, SQLException{
     	System.out.println(DbConnection.getConnection());
+        System.out.println("connected");
     }
 }

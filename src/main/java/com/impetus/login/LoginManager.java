@@ -1,10 +1,11 @@
 package com.impetus.login;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import com.impetus.DbPlan.MajeHuntDao;
 import com.utils.DbConnection;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +28,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LoginManagerMain", urlPatterns = {"/LoginManagerMain"})
 public class LoginManager extends HttpServlet {
 
+    MajeHuntDao dao = new MajeHuntDao();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,34 +44,25 @@ public class LoginManager extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         Connection con = null;
         PrintWriter out = response.getWriter();
-        HttpSession session=request.getSession(true);
-        try { 
-            
+        HttpSession session = request.getSession(true);
+        try {
+
             /* TODO output your page here. You may use following sample code. */
             String emailid = request.getParameter("form-username");
             String password = request.getParameter("form-password");
-            con = DbConnection.getConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select count(0) from user_table where email_id='" + emailid + "' and password='" + password + "' ");
-            rs.next();
-            int count = rs.getInt(1);
-            if (count == 1) {
-                out.println("login successful");
+            if (dao.doLogin(emailid, password)) {
                 session.setAttribute("loginstatus", "true");
                 session.setAttribute("username", emailid);
-                RequestDispatcher rd=request.getRequestDispatcher("gamecontainer.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("gamecontainer.jsp");
                 rd.forward(request, response);
             } else {
-                out.print("login failure..");
-                session.setAttribute("loginstatus", "true");
-                RequestDispatcher rd=request.getRequestDispatcher("index.jsp?error=Login Failed !! Please try again.");
+                session.setAttribute("loginstatus", "false");
+                RequestDispatcher rd = request.getRequestDispatcher("index.jsp?error=Login Failed !! Please try again.");
                 rd.forward(request, response);
             }
-            out.println(emailid);
-        } catch (ClassNotFoundException | SQLException exc) {
-            out.println(exc.toString());
-        } finally {
-           
+
+        }catch(Exception exc){
+            
         }
     }
 
