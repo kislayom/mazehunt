@@ -40,9 +40,9 @@
     <body style="background-image: url('images/sherlock_wallpaper_1920x1200_02.jpg');">
         <script type="text/javascript">
 
-            function load(name) {
+            function load(name,param) {
 
-                $("#mainbox").load(name + '.jsp');
+                $("#mainbox").load(name + '.jsp?quesid='+param);
                 $("#mainbox").fadeIn('3000');
             }
 
@@ -68,7 +68,7 @@
                     <%@include file="menu.jsp" %> 
                 </div>
                 <div class="col-md-10" style="min-height: 500px;" id="mainbox">
-                    <%@include file="instruction.jsp" %>
+               
                 </div>
             </div>
 
