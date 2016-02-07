@@ -37,7 +37,7 @@
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
     </head>
-    <body>
+    <body style="background-image: url('images/background.jpg');">
         <script type="text/javascript">
 
             function load(name) {
@@ -47,6 +47,7 @@
             }
 
         </script> 
+        <img class="img-rounded" src="images/Impetus.PNG">
         <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
         <div class="inner-bg">
 
@@ -57,7 +58,7 @@
                     <%@include file="menu.jsp" %> 
                 </div>
                 <div class="col-md-10" style="min-height: 500px;" id="mainbox">
-
+                    <%@include file="instruction.jsp" %>
                 </div>
             </div>
 
