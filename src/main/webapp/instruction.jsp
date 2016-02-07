@@ -9,8 +9,8 @@
 
 <br>
 <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-8 panel-body">
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel-body">
         <div class="panel panel-default">
             <div class="panel-heading"><strong>We don't have rules just hunt on GOLD.... but limelight is as: </strong></div>
 

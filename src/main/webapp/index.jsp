@@ -42,7 +42,7 @@
 
         <!-- Top content -->
         
-        <img class="img-rounded" src="images/Impetus.PNG">
+        <img class="img-rounded" src="images/logo.png">
         <div class="top-content">
            
             <div class="alert-warning">

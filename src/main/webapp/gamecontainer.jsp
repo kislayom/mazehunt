@@ -6,6 +6,15 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
+<%
+    String login = (String)session.getAttribute("loginstatus");
+    if(login==null||!login.equals("true")){
+         RequestDispatcher rd = request.getRequestDispatcher("index.jsp?error=Session timed out.");
+         rd.forward(request, response);
+    }
+%>
+
 <html>
 
     <head>
@@ -40,23 +49,23 @@
     <body style="background-image: url('images/sherlock_wallpaper_1920x1200_02.jpg');">
         <script type="text/javascript">
 
-            function load(name,param) {
+            function load(name, param) {
 
-                $("#mainbox").load(name + '.jsp?quesid='+param);
+                $("#mainbox").load(name + '.jsp?quesid=' + param);
                 $("#mainbox").fadeIn('3000');
             }
 
         </script> 
         <div class="row">
             <div class="col-md-4">
-                <img class="img-rounded" src="images/Impetus.PNG">
+                <img class="img-rounded" src="images/logo.png">
                 <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
             </div>
             <div class="page-header col-md-4">
-                <h1 class="text-success text-info"><strong>Hunt on Sherlock .....</strong></h1>
+                <h1 class="text-success text-info"><strong style="color:#f0ad4e;">Hunt on Sherlock .....</strong></h1>
             </div>
             <div class='col-lg-3'>
-              
+
             </div>
         </div>
         <div class="inner-bg">
@@ -68,7 +77,7 @@
                     <%@include file="menu.jsp" %> 
                 </div>
                 <div class="col-md-10" style="min-height: 500px;" id="mainbox">
-               
+
                 </div>
             </div>
 
