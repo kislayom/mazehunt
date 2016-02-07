@@ -37,18 +37,28 @@
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
     </head>
-    <body style="background-image: url('images/background.jpg');">
+    <body style="background-image: url('images/sherlock_wallpaper_1920x1200_02.jpg');">
         <script type="text/javascript">
 
             function load(name) {
-                
+
                 $("#mainbox").load(name + '.jsp');
                 $("#mainbox").fadeIn('3000');
             }
 
         </script> 
-        <img class="img-rounded" src="images/Impetus.PNG">
-        <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
+        <div class="row">
+            <div class="col-md-4">
+                <img class="img-rounded" src="images/Impetus.PNG">
+                <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
+            </div>
+            <div class="page-header col-md-4">
+                <h1 class="text-success text-info"><strong>Hunt on Sherlock .....</strong></h1>
+            </div>
+            <div class='col-lg-3'>
+              
+            </div>
+        </div>
         <div class="inner-bg">
 
             <div class="row">
