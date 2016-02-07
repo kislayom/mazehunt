@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class DbConnection {
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://192.168.1.102:3306/mazehunt";
+    static final String DB_URL = "jdbc:mysql://104.168.163.65:3306/mazehunt";
 
     //  Database credentials
     static final String USER = "amit";
