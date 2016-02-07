@@ -191,3 +191,13 @@ footer a:hover, footer a:focus { border-bottom: 1px dotted #19b9e7; }
 
 }
 
+image {
+position:absolute;
+margin:auto;
+top:0;
+bottom:0;
+left:0;
+right:0;
+width:200;
+}
+
