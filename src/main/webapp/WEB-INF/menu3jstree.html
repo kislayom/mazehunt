@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jstree basic demos</title>
+	<style>
+	html { margin:0; padding:0; font-size:62.5%; }
+	body { max-width:800px; min-width:300px; margin:0 auto; padding:20px 10px; font-size:14px; font-size:1.4em; }
+	h1 { font-size:1.8em; }
+	.demo { overflow:auto; border:1px solid silver; min-height:100px; }
+	</style>
+	<link rel="stylesheet" href="assets/jstree/dist/themes/default/style.min.css" />
+</head>
+<body>
+	
+	
+	<h1>Callback function data demo</h1>
+	<div id="clbk" class="demo"></div>
+
+	  <script src="assets/jstree/dist/lib/jquery.js"></script>
+	<script src="assets/jstree/dist/jstree.min.js"></script>
+	
+	<script>
+	// html demo
+	//$('#html').jstree();
+
+	// inline data demo
+	
+	// data from callback
+	$('#html')
+    .on('changed.jstree', function (e, data) {
+    alert(data)
+  }).jstree();
+	
+$('#clbk').jstree({
+
+ 'core' : {
+    'data' : [
+       { "id" : "101", "parent" : "#", "text" : "Simple root node"  },
+       { "id" : "102", "parent" : "#", "text" : "Root node 2" },
+       { "id" : "103", "parent" : "101", "text" : "Child 1" },
+       { "id" : "104", "parent" : "102", "text" : "Child 2" },
+	    { "id" : "106", "parent" : "102", "text" : "Child 3" },
+	 { "id" : "107", "parent" : "106", "text" : "Child 4" },
+	 
+    ]
+} 
+
+}).bind("select_node.jstree", function (e, data) { 
+
+alert(data.selected[0]);
+
+load('questions', data.selected[0]);
+
+ });
+
+
+function load(name, param) {
+alert("name")
+alert(name) 
+alert(param) 
+                $("#mainbox").load(name + '.jsp?quesid=' + param);
+                $("#mainbox").fadeIn('3000');
+            };
+
+	
+	
+	</script>
+	 <div class="col-md-10" style="min-height: 500px;" id="mainbox">
+
+                </div>
+</body>
+</html>

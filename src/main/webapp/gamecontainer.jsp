@@ -44,6 +44,8 @@
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="stylesheet" href="assets/jstree/dist/themes/default/style.min.css" />
+        
 
     </head>
     <body style="background-image: url('images/sherlock_wallpaper_1920x1200_02.jpg');">
@@ -85,5 +87,6 @@
         <script src="assets/js/jquery-1.11.1.min.js"></script>
         <script src="assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/js/scripts.js"></script>
+         <script src="assets/jstree/dist/jstree.min.js"></script>
     </body>
 </html>
