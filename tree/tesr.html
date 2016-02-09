@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <script language="javascript" type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+        <script language="javascript" type="text/javascript" src="lib/arbor.js" ></script>
+        <script language="javascript" type="text/javascript" src="demos/_/graphics.js" ></script>
+        <script language="javascript" type="text/javascript" src="demos/halfviz/src/renderer.js" ></script>
+    </head>
+    <body>
+      <canvas id="viewport" width="900" height="800"></canvas>
+      <script language="javascript" type="text/javascript">
+            var sys = arbor.ParticleSystem(1000, 400,1);
+            sys.parameters({gravity:true});
+            sys.renderer = Renderer("#viewport") ;
+            var data = {
+               nodes:{
+                 question101:{'color':'red','shape':'dot','label':'question101',link:'http://stackoverflow.com'},
+                 question102:{'color':'green','shape':'dot','label':'question102',link:'http://stackoverflow.com'},
+                 question103:{'color':'blue','shape':'dot','label':'question103',link:'http://stackoverflow.com'},
+                 question104:{'color':'orange','shape':'dot','label':'question104',link:'http://stackoverflow.com'},
+                 question105:{'color':'green','shape':'dot','label':'question105',link:'http://stackoverflow.com'},
+                 question106:{'color':'blue','shape':'dot','label':'question106',link:'http://stackoverflow.com'},
+                 question107:{'color':'blue','shape':'dot','label':'question107',link:'http://stackoverflow.com'},
+               }, 
+                edges:{
+				question101:{ question102:{},question103:{}, },
+                 question102:{ question104:{}, question105:{} },
+                 question103:{ question106:{} ,question107:{} }
+               }
+             };
+            sys.graft(data);
+         
+      </script>
+    </body>
+</html>
+@RC1140
+Owner
