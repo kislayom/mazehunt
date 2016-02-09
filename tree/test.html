@@ -13,16 +13,16 @@
             sys.renderer = Renderer("#viewport") ;
             var data = {
                nodes:{
-                 question101:{'color':'red','shape':'dot','label':'question101',link:'http://stackoverflow.com'},
-                 question102:{'color':'green','shape':'dot','label':'question102',link:'http://stackoverflow.com'},
-                 question103:{'color':'blue','shape':'dot','label':'question103',link:'http://stackoverflow.com'},
-                 question104:{'color':'orange','shape':'dot','label':'question104',link:'http://stackoverflow.com'},
-                 question105:{'color':'green','shape':'dot','label':'question105',link:'http://stackoverflow.com'},
-                 question106:{'color':'blue','shape':'dot','label':'question106',link:'http://stackoverflow.com'},
-                 question107:{'color':'blue','shape':'dot','label':'question107',link:'http://stackoverflow.com'},
+                 question101:{'color':'red','shape':'dot','label':'question101'},
+                 question102:{'color':'green','shape':'dot','label':'question102'},
+                 question103:{'color':'blue','shape':'dot','label':'question103'},
+                 question104:{'color':'orange','shape':'dot','label':'question104'},
+                 question105:{'color':'green','shape':'dot','label':'question105'},
+                 question106:{'color':'blue','shape':'dot','label':'question106'},
+                 question107:{'color':'blue','shape':'dot','label':'question107'},
                }, 
                 edges:{
-				question101:{ question102:{},question103:{}, },
+				 question101:{ question102:{},question103:{}, },
                  question102:{ question104:{}, question105:{} },
                  question103:{ question106:{} ,question107:{} }
                }
