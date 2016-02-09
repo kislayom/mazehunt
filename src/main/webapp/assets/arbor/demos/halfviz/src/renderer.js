@@ -150,12 +150,12 @@
              if (dragged.node !== null){
                  if(currentid == null) {
 			        currentid = dragged.node.name;   
-			       window.open("http://104.168.163.65/mazehunt/");
+			      load('questions', currentid);
             } else {
-					if( currentid !== dragged.node.name ){
-					      currentid = dragged.node.name
-					window.open("http://104.168.163.65/mazehunt/");	
-				} 
+					if(currentid !== dragged.node.name ){
+					      currentid = dragged.node.name;
+					       load('questions', currentid);
+					} 
             }
           }            
         return false
