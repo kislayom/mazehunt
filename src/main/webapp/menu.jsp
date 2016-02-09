@@ -18,18 +18,18 @@
             sys.renderer = Renderer("#viewport") ;
             var data = {
                nodes:{
-                 question101:{'color':'red','shape':'dot','label':'question101'},
-                 question102:{'color':'green','shape':'dot','label':'question102'},
-                 question103:{'color':'blue','shape':'dot','label':'question103'},
-                 question104:{'color':'orange','shape':'dot','label':'question104'},
-                 question105:{'color':'green','shape':'dot','label':'question105'},
-                 question106:{'color':'blue','shape':'dot','label':'question106'},
-                 question107:{'color':'blue','shape':'dot','label':'question107'},
+                 101:{'color':'red','shape':'dot','label':'question101'},
+                 102:{'color':'green','shape':'dot','label':'question102'},
+                 103:{'color':'blue','shape':'dot','label':'question103'},
+                 104:{'color':'orange','shape':'dot','label':'question104'},
+                 105:{'color':'green','shape':'dot','label':'question105'},
+                 106:{'color':'blue','shape':'dot','label':'question106'},
+                 107:{'color':'blue','shape':'dot','label':'question107'},
                }, 
                 edges:{
-				 question101:{ question102:{},question103:{}, },
-                 question102:{ question104:{}, question105:{} },
-                 question103:{ question106:{} ,question107:{} }
+				 101:{ 102:{},103:{}, },
+                 102:{ 104:{}, 105:{} },
+                 103:{ 106:{} ,107:{} }
                }
              };
             sys.graft(data);
