@@ -123,10 +123,11 @@
         nearest = null;
         var dragged = null;
         var oldmass = 1
-
+        var currentid= null;
         // set up a handler object that will initially listen for mousedowns then
         // for moves and mouseups while dragging
         var handler = {
+			
           clicked:function(e){
 			  
             var pos = $(canvas).offset();
@@ -136,20 +137,28 @@
             if (dragged.node !== null) dragged.node.fixed = true
 
             $(canvas).bind('mousemove', handler.dragged)
+             $(canvas).bind('mouseup', handler.mouseClickedEvent)
             $(window).bind('mouseup', handler.dropped)
             
-            $(canvas).bind('mouseup', handler.mouseClickedEvent)
+          
 
-            return false
+            
           },
             mouseClickedEvent:function(e){
-				
+				alert(currentid)
             if (dragged===null || dragged.node===undefined) return
              if (dragged.node !== null){
-                           
-             var id=dragged.node.name;
-            alert('Node selected: ' + id);
-             window.open("http://www.w3schools.com");
+                 if(currentid == null) {
+			        currentid = dragged.node.name;   
+			       window.open("http://104.168.163.65/mazehunt/");
+            } else {
+					if( currentid !== dragged.node.name ){
+					      currentid = dragged.node.name
+					window.open("http://104.168.163.65/mazehunt/");	
+				} else {
+					window.open("http://104.168.163.65/mazehunt/");	
+				}
+            }
           }            
         return false
     },
