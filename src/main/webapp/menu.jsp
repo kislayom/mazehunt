@@ -4,6 +4,20 @@
         <script language="javascript" type="text/javascript" src="assets/arbor/lib/arbor.js" ></script>
         <script language="javascript" type="text/javascript" src="assets/arbor/demos/_/graphics.js" ></script>
         <script language="javascript" type="text/javascript" src="assets/arbor/demos/halfviz/src/renderer.js" ></script>
+        
+        <%@ page import="java.util.*" %>
+<%@ page import="com.utils.DbConnection" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.SQLException" %>
+ 
+<%
+Connection con = null;
+con = DbConnection.getConnection();
+Statement stmt = con.createStatement();              
+%>
+ 
     </head>
     <body>
     <div class="col-md-12 text-left">
@@ -16,24 +30,27 @@
             var sys = arbor.ParticleSystem(1000, 400,1);
             sys.parameters({gravity:true});
             sys.renderer = Renderer("#viewport") ;
-            var data = {
+           
+           var data = {
                nodes:{
-                 101:{'color':'red','shape':'dot','label':'question101'},
-                 102:{'color':'green','shape':'dot','label':'question102'},
-                 103:{'color':'blue','shape':'dot','label':'question103'},
-                 104:{'color':'orange','shape':'dot','label':'question104'},
-                 105:{'color':'green','shape':'dot','label':'question105'},
-                 106:{'color':'blue','shape':'dot','label':'question106'},
-                 107:{'color':'blue','shape':'dot','label':'question107'},
+                  <% ResultSet rs = stmt.executeQuery(
+                       "select ques_attribute,child_info from question_attribute where question_id in (101,102,103,104,105,106) ");
+                   while(rs.next()) {
+					    out.println(rs.getString("ques_attribute"));
+				   }
+              %>
                }, 
                 edges:{
-				 101:{ 102:{},103:{}, },
-                 102:{ 104:{}, 105:{} },
-                 103:{ 106:{} ,107:{} }
+				  <% 
+				  ResultSet rs1 = stmt.executeQuery(
+                       "select child_info from question_attribute where question_id in (101,102,103,104,105,106) and child_info IS NOT NULL ");
+				  while(rs1.next()) {
+					 
+					    out.println(rs1.getString("child_info"));
+				   } %>
                }
              };
             sys.graft(data);
-         
       </script>
     </body>
 </html>
