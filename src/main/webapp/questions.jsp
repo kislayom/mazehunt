@@ -18,34 +18,29 @@
     <body>
         <%
             String quesid = request.getParameter("quesid");
-            String question="";
+            String question = "";
             if (quesid == null || quesid.length() == 0) {
                 RequestDispatcher rd = request.getRequestDispatcher("index.jsp?error=Did you just try to hack up?.");
                 session.setAttribute("loginstatus", "false");
                 rd.forward(request, response);
-                }
-                Connection con = null;
-                try {
-                    con = DbConnection.getConnection();
-                    Statement stmt=con.createStatement();
-                    ResultSet rs=stmt.executeQuery("select question from question_info where id='"+quesid+"'");
-                    if(rs.next()){
-                        question=rs.getString(1);
-                    }else{
-                        question ="No question available";
-                    }
-                    
-                } catch (Exception exc) {
-                    out.write(exc.toString());
-                } finally {
-                    try {
-                        con.close();
-                    } catch (Exception exc) {
-
-                    }
+            }
+            Connection con = null;
+            try {
+                con = DbConnection.getConnection();
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select question from question_info where id='" + quesid + "'");
+                if (rs.next()) {
+                    question = rs.getString(1);
+                } else {
+                    question = "No question available";
                 }
 
-            
+            } catch (Exception exc) {
+                out.write(exc.toString());
+            } finally {
+
+            }
+
 
         %>
         <br>
@@ -59,14 +54,14 @@
                     </div>
                     <div class="panel-info">
                         <%= question%>
-                        
+
                         <form>
                             <div class="row">
                                 <div class="col-md-3"></div>
                                 <div class="col-md-5">
                                     <div class="form-group">
 
-                                        <input type="text" class="form-control" id="answer" placeholder="Answer" name="answer">
+                                        <input id="answer1" type="text" class="form-control" id="answer" placeholder="Answer" name="answer">
 
                                     </div>
                                 </div>
@@ -74,7 +69,45 @@
                             <div class="row">
                                 <div class="col-md-4"></div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn btn-danger">Bingo!!</button>
+                                    <%
+                                        try {
+                                            Statement stmt = con.createStatement();
+                                            String query = "select count(0) from explored_nodes where question_id='" + quesid + "' and email_id='" + session.getAttribute("username") + "'";
+                                            ResultSet rs = stmt.executeQuery(query);
+                                            if (rs.next()) {
+                                                if (rs.getInt(1) == 0) {
+                                                    out.write("<button type=\"button\" id=\"submitanswer\" class=\"btn btn-danger\">Bingo!!</button>");
+                                                }
+
+                                            }
+                                        } catch (Exception exc) {
+
+                                        } finally {
+                                            try {
+                                                con.close();
+                                            } catch (Exception exc) {
+
+                                            }
+                                        }
+                                    %>
+
+                                    <script type="text/javascript">
+                                        $(function () {
+
+                                            $("#submitanswer").click(function () {
+                                                var ans = $('#answer1').val();
+                                                if (ans == '') {
+                                                    alert('cant have empty answer');
+                                                } else {
+                                                    $.ajax({url: "QuestionController?data=" + ans + "&quesid=<%=quesid%>", success: function (result) {
+                                                            alert(result);
+                                                        }});
+
+                                                }
+
+                                            });
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </form>
@@ -82,6 +115,16 @@
                     &nbsp;<br>
                 </div>
             </div>
+        </div>
+
+        <div id="dialogmessage1" title="Cannot have empty answer...">
+            <p>
+                <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+                Sherlock seems to be sleeping... 
+            </p>
+            <p>
+                Whats up buddy ??.
+            </p>
         </div>
 
 
