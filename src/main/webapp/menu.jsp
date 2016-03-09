@@ -43,25 +43,42 @@ ResultSet rs2 = stmt.executeQuery(
 
       <canvas id="viewport" width="300" height="800"></canvas>
       <script language="javascript" type="text/javascript">
-            var sys = arbor.ParticleSystem(1000, 300,500);
+		       <% 
+                   if(ques_attribute.size() > 0) {  %>
+					  
+                    var sys = arbor.ParticleSystem(1000, 350,1);
+				<% } else { %>
+					
+					  sys = arbor.ParticleSystem(0, 0,0);
+				
+               <% }%>
             sys.parameters({gravity:true});
             sys.renderer = Renderer("#viewport") ;
            
+          
            var data = {
                nodes:{
                   <%  
+                  
+                   if(ques_attribute.size() > 0) { 
                    for(int i=0; i < ques_attribute.size(); i++){
 					  out.println(ques_attribute.get(i));
-				}
-              %>
+				  } 
+				} else {%>
+					
+					101:{'color':'red','shape':'dot','label':'question101'},
+				
+               <% }%>
                }, 
                 edges:{
 				  <% 
+				  if(child_info.size() > 0) { 
 				   for(int i=0; i < child_info.size(); i++){
 					  out.println(child_info.get(i));
 					 }
-				   
-				   %>
+				   } else {   %>
+					  101:{ }, 
+				   <%}%>
                }
              };
             sys.graft(data);
