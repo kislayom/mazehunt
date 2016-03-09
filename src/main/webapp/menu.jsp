@@ -5,7 +5,7 @@
         <script language="javascript" type="text/javascript" src="assets/arbor/demos/_/graphics.js" ></script>
         <script language="javascript" type="text/javascript" src="assets/arbor/demos/halfviz/src/renderer.js" ></script>
         
-        <%@ page import="java.util.*" %>
+<%@ page import="java.util.*" %>
 <%@ page import="com.utils.DbConnection" %>
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.Statement" %>
@@ -38,6 +38,7 @@ ResultSet rs2 = stmt.executeQuery(
     <div class="col-md-12 text-left">
         <span class="glyphicon glyphicon-home" aria-hidden="true"> <a href="gamecontainer.jsp">Home</a></span>
         <span class="glyphicon glyphicon-apple" aria-hidden="true"> <a href="#instruction" onclick="load('instruction');return false;">Instruction Set</a></span>
+        <span class="glyphicon glyphicon-home" aria-hidden="true"> <a href="logout.jsp">Logout</a></span>
     </div>
 
       <canvas id="viewport" width="300" height="800"></canvas>
