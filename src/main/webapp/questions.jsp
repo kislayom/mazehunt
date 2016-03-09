@@ -100,10 +100,10 @@
                                                     alert('cant have empty answer');
                                                 } else {
                                                     $.ajax({url: "QuestionController?data=" + ans + "&quesid=<%=quesid%>", success: function (result) {
-                                                            if(result='Hare Krishna'){
+                                                            if (result == 'Hare Krishna') {
                                                                 load('success');
-                                                                $('#menucontainer').load('menu.jsp');
-                                                            }else{
+                                                                loadPageMenu();
+                                                            } else {
                                                                 alert('Try again Mr Williams!!');
                                                             }
                                                         }});
@@ -112,6 +112,9 @@
 
                                             });
                                         });
+                                        function loadPageMenu() {
+                                            $('#menucontainer').load('menu.jsp');
+                                        }
                                     </script>
                                 </div>
                             </div>
