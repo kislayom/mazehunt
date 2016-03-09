@@ -100,7 +100,12 @@
                                                     alert('cant have empty answer');
                                                 } else {
                                                     $.ajax({url: "QuestionController?data=" + ans + "&quesid=<%=quesid%>", success: function (result) {
-                                                            alert(result);
+                                                            if(result='Hare Krishna'){
+                                                                load('success');
+                                                                $('#menucontainer').load('menu.jsp');
+                                                            }else{
+                                                                alert('Try again Mr Williams!!');
+                                                            }
                                                         }});
 
                                                 }

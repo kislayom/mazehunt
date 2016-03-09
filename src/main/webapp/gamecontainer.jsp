@@ -73,7 +73,7 @@
         <div class="inner-bg">
 
             <div class="row">
-                <div class="col-md-2 ">
+                <div class="col-md-2 " id="menucontainer">
                     <!-- 
                     -->  
                     <%@include file="menu.jsp" %> 
