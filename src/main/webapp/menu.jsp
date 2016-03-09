@@ -11,11 +11,26 @@
 <%@ page import="java.sql.Statement" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
  
 <%
+
+
+String emailid = (String)session.getAttribute("username");
 Connection con = null;
 con = DbConnection.getConnection();
-Statement stmt = con.createStatement();              
+Statement stmt = con.createStatement();      
+List ques_attribute = new ArrayList();
+List child_info = new ArrayList();
+				    
+ResultSet rs2 = stmt.executeQuery(
+"select ques_attribute,child_info from question_attribute where question_id in (select traverse_id from question_travel  where question_id in (select question_id from explored_nodes where email_id='" + emailid + "'))");
+                       
+                        while(rs2.next()) {
+					    ques_attribute.add(rs2.getString("ques_attribute"));
+					    child_info.add(rs2.getString("child_info"));
+					    }    		       
 %>
  
     </head>
@@ -27,32 +42,28 @@ Statement stmt = con.createStatement();
 
       <canvas id="viewport" width="300" height="800"></canvas>
       <script language="javascript" type="text/javascript">
-            var sys = arbor.ParticleSystem(1000, 400,1);
+            var sys = arbor.ParticleSystem(1000, 300,500);
             sys.parameters({gravity:true});
             sys.renderer = Renderer("#viewport") ;
            
            var data = {
                nodes:{
-                  <% ResultSet rs = stmt.executeQuery(
-                       "select ques_attribute,child_info from question_attribute where question_id in (101,102,103,104,105,106) ");
-                   while(rs.next()) {
-					    out.println(rs.getString("ques_attribute"));
-				   }
+                  <%  
+                   for(int i=0; i < ques_attribute.size(); i++){
+					  out.println(ques_attribute.get(i));
+				}
               %>
                }, 
                 edges:{
 				  <% 
-				  ResultSet rs1 = stmt.executeQuery(
-                       "select child_info from question_attribute where question_id in (101,102,103,104,105,106) and child_info IS NOT NULL ");
-				  while(rs1.next()) {
-					 
-					    out.println(rs1.getString("child_info"));
-				   } %>
+				   for(int i=0; i < child_info.size(); i++){
+					  out.println(child_info.get(i));
+					 }
+				   
+				   %>
                }
              };
             sys.graft(data);
       </script>
     </body>
 </html>
-@RC1140
-Owner
