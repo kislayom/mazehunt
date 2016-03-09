@@ -88,5 +88,6 @@
         <script src="assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/js/scripts.js"></script>
          <script src="assets/jstree/dist/jstree.min.js"></script>
+         <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
     </body>
 </html>

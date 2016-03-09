@@ -97,6 +97,7 @@
                                             $("#submitanswer").click(function () {
                                                 var ans = $('#answer1').val();
                                                 if (ans == '') {
+                                                    $("#dialogmessage1").dialog("open");
                                                     alert('cant have empty answer');
                                                 } else {
                                                     $.ajax({url: "QuestionController?data=" + ans + "&quesid=<%=quesid%>", success: function (result) {
@@ -124,8 +125,27 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+            $(function () {
+                $("#dialogmessage1").dialog({
+                    autoOpen: false,
+                    show: {
+                        effect: "blind",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "explode",
+                        duration: 1000
+                    }
+                });
 
-        <div id="dialogmessage1" title="Cannot have empty answer...">
+                $("#answer1").click(function () {
+                    $("#dialogmessage1").dialog("open");
+                });
+            });
+        </script>
+
+        <div id="dialogmessage1" title="Cannot have empty answer">
             <p>
                 <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
                 Sherlock seems to be sleeping... 
