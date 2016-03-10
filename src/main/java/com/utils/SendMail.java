@@ -36,7 +36,7 @@ public class SendMail {
         props.put("mail.oyazen.socketFactory.class", SSL_FACTORY);
         props.put("mail.smtp.starttls.enable", "true");
         // This block is used to create session event
-        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("mazehunt@gmail.com", "0jb1a11a");
             }

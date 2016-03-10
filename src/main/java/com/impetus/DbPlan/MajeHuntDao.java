@@ -62,12 +62,7 @@ public class MajeHuntDao {
             preparedStatement.setString(1, emailid);
             preparedStatement.setString(2, password);
             preparedStatement.executeUpdate();
-            
-            String sql1 = "insert into explored_nodes values(?,?)";
-            preparedStatement = con.prepareStatement(sql1);
-            preparedStatement.setString(1, emailid);
-            preparedStatement.setInt(2, 101);
-            preparedStatement.executeUpdate();
+           
             flag = true;
         } catch (ClassNotFoundException | SQLException e) {
 
