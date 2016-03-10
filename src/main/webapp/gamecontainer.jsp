@@ -84,10 +84,17 @@
             </div>
 
         </div>
-        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        
         <script src="assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/js/scripts.js"></script>
          <script src="assets/jstree/dist/jstree.min.js"></script>
-         <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+         
+		 
+		   <link rel="stylesheet" href="assets/js/jquery-ui.css">
+  <script src="assets/js/jquery-1.11.1.js"></script>
+  <script src="assets/js/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+		 
+		 
     </body>
 </html>
