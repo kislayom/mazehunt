@@ -139,9 +139,7 @@
                     }
                 });
 
-                $("#answer1").click(function () {
-                    $("#dialogmessage1").dialog("open");
-                });
+              
             });
         </script>
 
