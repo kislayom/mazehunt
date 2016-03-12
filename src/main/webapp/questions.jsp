@@ -98,7 +98,7 @@
                                                 var ans = $('#answer1').val();
                                                 if (ans == '') {
                                                     $("#dialogmessage1").dialog("open");
-                                                    alert('cant have empty answer');
+                                                  //  alert('cant have empty answer');
                                                 } else {
                                                     $.ajax({url: "QuestionController?data=" + ans + "&quesid=<%=quesid%>", success: function (result) {
                                                             if (result == 'Hare Krishna') {
@@ -139,7 +139,7 @@
                     }
                 });
 
-              
+
             });
         </script>
 

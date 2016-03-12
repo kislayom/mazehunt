@@ -20,8 +20,8 @@ public class DbConnection {
 
     // Database credentials
     static final String USER = "amit";
-    static final String PASS = "pathak"; 
-    //static final String PASS = "0_j_b1a11a";
+//    static final String PASS = "pathak"; 
+    static final String PASS = "0_j_b1a11a";
 
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
