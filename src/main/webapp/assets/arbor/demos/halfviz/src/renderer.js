@@ -136,9 +136,9 @@
 
             if (dragged.node !== null) dragged.node.fixed = true
 
-            $(canvas).bind('mousemove', handler.dragged)
-          //   $(canvas).bind('mouseup', handler.mouseClickedEvent)
-            $(window).bind('mouseup', handler.dropped)
+           // $(canvas).bind('mousemove', handler.dragged)
+             $(canvas).bind('mouseup', handler.mouseClickedEvent)
+         //   $(window).bind('mouseup', handler.dropped)
             
           return false
 
@@ -149,7 +149,8 @@
             if (dragged===null || dragged.node===undefined) return
              if (dragged.node !== null){
                  if(currentid == null) {
-			        currentid = dragged.node.name;   
+			        currentid = dragged.node.name;  
+                             //   alert('hey');
 			      load('questions', currentid);
             } else {
 					if(currentid !== dragged.node.name ){

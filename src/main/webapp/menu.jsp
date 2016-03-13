@@ -38,6 +38,7 @@
         <div class="col-md-12 text-left">
             <span class="glyphicon glyphicon-home" aria-hidden="true"> <a href="gamecontainer.jsp">Home</a></span>
             <span class="glyphicon glyphicon-apple" aria-hidden="true"> <a href="#instruction" onclick="load('instruction'); return false;">Instruction Set</a></span>
+            <span class="glyphicon glyphicon-apple" aria-hidden="true"> <a href="#trending" onclick="load('trending'); return false;">Trending Players</a></span>
             <span class="glyphicon glyphicon-home" aria-hidden="true"> <a href="logout.jsp">Logout</a></span>
         </div>
 
