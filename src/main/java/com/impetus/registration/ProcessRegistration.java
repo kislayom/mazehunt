@@ -53,7 +53,7 @@ public class ProcessRegistration extends HttpServlet {
             	if(flag){
             		out.println(emailid);
             		sendmailToUser(emailid,password);
-            		RequestDispatcher rd=request.getRequestDispatcher("index.jsp?success=Registration Sucessfully.Kindly check mail for login credentials");
+            		RequestDispatcher rd=request.getRequestDispatcher("index.jsp?success=Registration Sucessfull. Kindly check mail for login credentials");
                     rd.forward(request, response);
             	} else {
             		RequestDispatcher rd=request.getRequestDispatcher("index.jsp?error=issue with registarion,Please try after some time");

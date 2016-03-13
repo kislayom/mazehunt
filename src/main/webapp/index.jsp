@@ -41,23 +41,23 @@
     <body style="background-image: url('images/sherlock_holmes_png_by_hestiac-d78wayq.png'); background-repeat: no-repeat;">
 
         <!-- Top content -->
-        
+
         <img class="img-rounded" src="images/logo.png">
         <div class="top-content">
-           
+
             <div class="alert-warning">
                 <%
-                    String error=request.getParameter("error");
-                    if(error!=null){
-                        out.write(" <div class=\"alert-warning\">"+error+"</div>");
+                    String error = request.getParameter("error");
+                    if (error != null) {
+                        out.write(" <div class=\"alert-warning\">" + error + "</div>");
                     }
                 %>
             </div>
-             <div class="alert-warning">
+            <div class="alert-warning">
                 <%
-                    String success=request.getParameter("success");
-                    if(success!=null){
-                        out.write(" <div class=\"alert-success\">"+success+"</div>");
+                    String success = request.getParameter("success");
+                    if (success != null) {
+                        out.write(" <div class=\"alert-success\">" + success + "</div>");
                     }
                 %>
             </div>
@@ -162,14 +162,75 @@
         </footer>
 
         <!-- Javascript -->
-        <script src="assets/js/jquery-1.11.1.min.js"></script>
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/external/jquery/jquery.js"></script>
+        <script src="assets/js/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="assets/js/jquery-ui.css">
+        
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>      
         <script src="assets/js/scripts.js"></script>
-
-        <!--[if lt IE 10]>
-            <script src="assets/js/placeholder.js"></script>
-        <![endif]-->
-
+        
     </body>
+
+    <div id="dialogmessageloginerror" title="Error Message">
+        <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+
+        </p>
+        <p>
+        <div id="errormessage"><%
+            //  String error = request.getParameter("error");
+            if (error != null) {
+                out.write(error);
+            }
+            %></div>
+    </p>
+</div>
+    
+       <div id="dialogmessageloginsuccess" title="Success Message">
+        <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+
+        </p>
+        <p>
+        <div id="successmessage"><%
+            //  String error = request.getParameter("error");
+            if (success != null) {
+                out.write(success);
+            }
+            %></div>
+    </p>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#dialogmessageloginerror").dialog({
+            autoOpen: false,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            }
+        });
+        
+         $("#dialogmessageloginsuccess").dialog({
+            autoOpen: false,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            }
+        });
+
+        if ($('#successmessage').html().length > 0) {
+            //alert()
+            $("#dialogmessageloginsuccess").dialog("open");
+        }
+    });
+</script>
 
 </html>

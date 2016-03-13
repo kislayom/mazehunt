@@ -94,7 +94,7 @@
               // move to the head position of the edge we just drew
               var wt = !isNaN(weight) ? parseFloat(weight) : 1
               var arrowLength = 6 + wt
-              var arrowWidth = 2 + wt
+              var arrowWidth = 6 + wt
               ctx.fillStyle = (color) ? color : "#cccccc"
               ctx.translate(head.x, head.y);
               ctx.rotate(Math.atan2(head.y - tail.y, head.x - tail.x));
@@ -136,9 +136,9 @@
 
             if (dragged.node !== null) dragged.node.fixed = true
 
-           // $(canvas).bind('mousemove', handler.dragged)
-             $(canvas).bind('mouseup', handler.mouseClickedEvent)
-          //  $(window).bind('mouseup', handler.dropped)
+            $(canvas).bind('mousemove', handler.dragged)
+          //   $(canvas).bind('mouseup', handler.mouseClickedEvent)
+            $(window).bind('mouseup', handler.dropped)
             
           return false
 

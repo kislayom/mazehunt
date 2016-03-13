@@ -42,6 +42,23 @@
     <body style="background-image: url('images/sherlock_wallpaper_1920x1200_02.jpg');">
         <script type="text/javascript">
 
+            setInterval(function () {
+                sessionCheck();
+            }, 30000);
+
+            function sessionCheck() {
+                $.get("sessionValidator", function (data) {
+                    if (data === 'true') {
+                        $('#sessionstatus').html('session: valid');
+
+                    } else {
+                        $('#sessionstatus').html('session: Invalid');
+                        window.location = "index.jsp?error=Session Timed Out!!, Please login again.";
+                    }
+
+                });
+            }
+
             function load(name, param) {
 
                 $("#mainbox").load(name + '.jsp?quesid=' + param);
@@ -52,13 +69,15 @@
         <div class="row">
             <div class="col-md-4">
                 <img class="img-rounded" src="images/logo.png">
-                <div class="top-content">Welcome <%= session.getAttribute("username")%></div>
+                <div class="top-content">Welcome <%= session.getAttribute("username")%>
+                </div>
+
             </div>
             <div class="page-header col-md-4">
                 <h1 class="text-success text-info"><strong style="color:#f0ad4e;">Hunt on Sherlock .....</strong></h1>
             </div>
             <div class='col-lg-3'>
-
+                <div class="text-danger" id="sessionstatus"></div>
             </div>
         </div>
         <div class="inner-bg">
@@ -82,9 +101,10 @@
 
 
         <link rel="stylesheet" href="assets/js/jquery-ui.css">
-        <script src="assets/js/jquery-1.11.1.js"></script>
+        <script src="assets/js/external/jquery/jquery.js"></script>
         <script src="assets/js/jquery-ui.js"></script>
         <link rel="stylesheet" href="/resources/demos/style.css">
+        
 
 
     </body>

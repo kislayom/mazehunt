@@ -8,6 +8,10 @@
         <servlet-name>LoginManager</servlet-name>
         <servlet-class>com.impetus.login.LoginManager</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>sessionValidator</servlet-name>
+        <servlet-class>com.utils.controllers.sessionValidator</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProcessRegistration</servlet-name>
         <url-pattern>/ProcessRegistration</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>LoginManager</servlet-name>
         <url-pattern>/LoginManager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>sessionValidator</servlet-name>
+        <url-pattern>/sessionValidator</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
