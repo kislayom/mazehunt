@@ -79,6 +79,10 @@ router:
   cloudFallbackComplexity: 8
 
 memory:
+  # `local`  — embed LayeredMemoryService in the agent JVM.
+  # `remote` — talk to a stand-alone mazehunt-memory-service over HTTP.
+  mode: local
+  remoteEndpoint: http://localhost:8765
   sqlitePath: ./data/memory.db
   # Hard cap on tokens the agent will show the model in one shot.
   workingTokenBudget: 4000

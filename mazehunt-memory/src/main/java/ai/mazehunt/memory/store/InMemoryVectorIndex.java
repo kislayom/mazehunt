@@ -1,4 +1,4 @@
-package ai.mazehunt.core.memory;
+package ai.mazehunt.memory.store;
 
 import ai.mazehunt.api.memory.MemoryItem;
 import ai.mazehunt.core.util.Vectors;

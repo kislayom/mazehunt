@@ -1,4 +1,4 @@
-package ai.mazehunt.core.memory;
+package ai.mazehunt.memory;
 
 import ai.mazehunt.api.memory.MemoryItem;
 import ai.mazehunt.api.memory.MemoryService;
@@ -8,6 +8,9 @@ import ai.mazehunt.api.model.Message;
 import ai.mazehunt.api.model.ModelClient;
 import ai.mazehunt.api.model.ModelRequest;
 import ai.mazehunt.core.util.Tokens;
+import ai.mazehunt.memory.store.InMemoryVectorIndex;
+import ai.mazehunt.memory.store.SqliteMemoryStore;
+import ai.mazehunt.memory.store.VectorIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

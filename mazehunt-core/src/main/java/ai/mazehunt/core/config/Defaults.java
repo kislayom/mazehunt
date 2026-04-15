@@ -45,6 +45,7 @@ public final class Defaults {
                         "llava:13b", "whisper-1",
                         true, 28000, 8),
                 new MazehuntConfig.Memory(
+                        "local", "http://localhost:8765",
                         "./data/memory.db", 4000, 1200, 12, 0.35),
                 new MazehuntConfig.Proactive(true, 3, true),
                 Map.of()

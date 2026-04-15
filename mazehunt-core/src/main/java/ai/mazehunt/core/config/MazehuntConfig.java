@@ -38,12 +38,18 @@ public record MazehuntConfig(
     ) {}
 
     public record Memory(
+            /** {@code local} = in-process LayeredMemoryService; {@code remote} = HTTP client. */
+            String mode,
+            /** Used when {@code mode=remote}. Example: {@code http://localhost:8765}. */
+            String remoteEndpoint,
             String sqlitePath,
             int workingTokenBudget,
             int recallDefaultBudget,
             int consolidateEveryNTurns,
             double confidenceFloor
-    ) {}
+    ) {
+        public boolean isRemote() { return "remote".equalsIgnoreCase(mode); }
+    }
 
     public record Proactive(
             boolean enabled,

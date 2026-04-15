@@ -3,10 +3,15 @@ package ai.mazehunt.cli;
 import ai.mazehunt.api.agent.AgentRequest;
 import ai.mazehunt.api.agent.AgentResponse;
 import ai.mazehunt.api.memory.MemoryItem;
+import ai.mazehunt.api.memory.MemoryService;
+import ai.mazehunt.api.model.EmbeddingClient;
+import ai.mazehunt.api.model.ModelClient;
 import ai.mazehunt.core.agent.MazehuntAgent;
 import ai.mazehunt.core.boot.Mazehunt;
 import ai.mazehunt.core.config.ConfigLoader;
 import ai.mazehunt.core.config.MazehuntConfig;
+import ai.mazehunt.core.router.ModelRouter;
+import ai.mazehunt.memory.MemoryFactory;
 import ai.mazehunt.models.ModelFactory;
 
 import java.io.BufferedReader;
@@ -35,8 +40,10 @@ public final class Main {
         Mazehunt mh = new Mazehunt(cfg);
         ModelFactory.registerAll(cfg, mh.router());
 
+        MemoryService memory = resolveMemory(cfg, mh.router());
+
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        MazehuntAgent agent = mh.build(prompt -> {
+        MazehuntAgent agent = mh.build(memory, prompt -> {
             System.out.print("\n[agent asks] " + prompt + "\n> ");
             try { return in.readLine(); } catch (Exception e) { return ""; }
         });
@@ -64,6 +71,26 @@ public final class Main {
             }
         }
         mh.proactive().stop();
+    }
+
+    /**
+     * Pick between local in-process memory and an HTTP client to a stand-alone
+     * memory service, based on {@code memory.mode} in the config.
+     */
+    private static MemoryService resolveMemory(MazehuntConfig cfg, ModelRouter router) {
+        if (cfg.memory().isRemote()) {
+            String url = cfg.memory().remoteEndpoint();
+            System.out.println("Memory: remote @ " + url);
+            return MemoryFactory.remote(url);
+        }
+        ModelClient fast = router.pick(ModelRouter.Role.FAST, ModelRouter.Task.light());
+        ModelClient embedModel = router.pick(ModelRouter.Role.EMBEDDING, ModelRouter.Task.light());
+        EmbeddingClient embedder = embedModel instanceof EmbeddingClient ec ? ec : null;
+        System.out.println("Memory: local @ " + cfg.memory().sqlitePath());
+        return MemoryFactory.local(Path.of(cfg.memory().sqlitePath()),
+                embedder, fast,
+                cfg.memory().consolidateEveryNTurns(),
+                cfg.memory().confidenceFloor());
     }
 
     private static boolean handleCommand(String line, Mazehunt mh) {

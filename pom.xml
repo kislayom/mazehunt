@@ -14,6 +14,7 @@
     <modules>
         <module>mazehunt-api</module>
         <module>mazehunt-core</module>
+        <module>mazehunt-memory</module>
         <module>mazehunt-models</module>
         <module>mazehunt-skills</module>
         <module>mazehunt-voice</module>
@@ -43,6 +44,11 @@
             <dependency>
                 <groupId>ai.mazehunt</groupId>
                 <artifactId>mazehunt-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.mazehunt</groupId>
+                <artifactId>mazehunt-memory</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

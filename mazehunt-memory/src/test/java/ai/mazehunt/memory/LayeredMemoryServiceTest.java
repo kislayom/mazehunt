@@ -1,7 +1,9 @@
-package ai.mazehunt.core.memory;
+package ai.mazehunt.memory;
 
 import ai.mazehunt.api.memory.MemoryItem;
 import ai.mazehunt.api.memory.RecallRequest;
+import ai.mazehunt.memory.store.InMemoryVectorIndex;
+import ai.mazehunt.memory.store.SqliteMemoryStore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

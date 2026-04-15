@@ -28,7 +28,8 @@ than a reactive chatbot. Built for workstations with **48 GB VRAM and 192 GB RAM
 | Module               | Purpose                                                       |
 |----------------------|---------------------------------------------------------------|
 | `mazehunt-api`       | Public interfaces & data records (zero deps)                  |
-| `mazehunt-core`      | Agent runtime, memory, planner, fact ledger, proactive engine |
+| `mazehunt-core`      | Agent runtime, planner, router, proactive engine              |
+| `mazehunt-memory`    | Memory tier as an **independent deployable service** + client |
 | `mazehunt-models`    | Adapters: Ollama, OpenAI, Anthropic, llama.cpp                |
 | `mazehunt-skills`    | Built-in skills (web, files, stocks, math, …)                 |
 | `mazehunt-voice`     | STT (Whisper) + TTS                                           |
@@ -39,10 +40,48 @@ than a reactive chatbot. Built for workstations with **48 GB VRAM and 192 GB RAM
 
 ```bash
 mvn -q -DskipTests package
+
+# Option A — everything in one JVM (default):
+java -jar mazehunt-cli/target/mazehunt-cli.jar
+
+# Option B — run memory as a separate service (recommended for production):
+java -jar mazehunt-memory/target/mazehunt-memory-service.jar --port 8765 &
+# then set `memory.mode: remote` in config/mazehunt.yaml and launch the CLI
 java -jar mazehunt-cli/target/mazehunt-cli.jar
 ```
 
 See `config/mazehunt.yaml` for routing, model pools and memory tuning.
+
+## Memory as an independent service
+
+The memory tier is a stand-alone HTTP service so the agent, background workers,
+CLI and any future UI can share one memory brain — and so you can restart the
+agent without losing state.
+
+```
+┌────────────────┐    HTTP     ┌──────────────────────┐
+│ mazehunt-cli   │ ──────────▶ │ mazehunt-memory      │
+│ (agent, tools) │   JSON      │  • LayeredMemory     │
+│                │ ◀────────── │  • SQLite + FTS5     │
+└────────────────┘             │  • vector index      │
+                               │  • consolidation     │
+                               └──────────────────────┘
+```
+
+Endpoints (`ai.mazehunt.memory.service.MemoryHttpServer`):
+
+| Method | Path                      | Purpose                              |
+|--------|---------------------------|--------------------------------------|
+| POST   | `/v1/memory/items`        | remember an episodic event           |
+| POST   | `/v1/memory/facts`        | learn a semantic fact                |
+| POST   | `/v1/memory/recall`       | hybrid BM25 + vector recall          |
+| POST   | `/v1/memory/consolidate`  | force episodic → semantic pass       |
+| GET    | `/v1/memory/stats`        | per-tier item counts                 |
+| GET    | `/v1/healthz`             | liveness probe                       |
+
+The agent calls through `MemoryService` — `MemoryFactory.local(...)` returns an
+in-process implementation, `MemoryFactory.remote(url)` returns an HTTP client.
+Everything else in the platform is transport-agnostic.
 
 ## Memory architecture (TL;DR)
 
