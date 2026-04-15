@@ -43,6 +43,13 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Real provider adapters only used by LiveOllamaMemoryIT. Test-scope
+             so they don't leak into the service's runtime classpath. -->
+        <dependency>
+            <groupId>ai.mazehunt</groupId>
+            <artifactId>mazehunt-models</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
