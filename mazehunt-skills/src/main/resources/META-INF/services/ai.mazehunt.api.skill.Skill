@@ -1,0 +1,4 @@
+ai.mazehunt.skills.core.WebFetchSkill
+ai.mazehunt.skills.core.FileSystemSkill
+ai.mazehunt.skills.core.MathSkill
+ai.mazehunt.skills.stocks.BuffettStockAnalysisSkill

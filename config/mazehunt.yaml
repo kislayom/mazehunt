@@ -1,0 +1,97 @@
+# Mazehunt configuration — tuned for 48 GB VRAM / 192 GB RAM workstations.
+# Local Ollama models are primary; cloud models are used only when a task
+# overflows local context or needs a capability the local pool lacks.
+
+hardware:
+  profile: workstation-48gb
+  gpuVramGb: 48
+  systemRamGb: 192
+
+models:
+  # ---- Local reasoning pool (pick any you have pulled in Ollama) ----
+  - id: qwen2.5:72b
+    provider: ollama
+    endpoint: http://localhost:11434
+    role: reasoning
+    contextTokens: 32768
+    local: true
+    options:
+      num_ctx: 32768
+      num_gpu: 99
+      temperature: 0.3
+
+  - id: deepseek-r1:70b
+    provider: ollama
+    endpoint: http://localhost:11434
+    role: reasoning
+    contextTokens: 32768
+    local: true
+
+  - id: gemma2:9b
+    provider: ollama
+    endpoint: http://localhost:11434
+    role: fast
+    contextTokens: 8192
+    local: true
+
+  # ---- Multi-modal ----
+  - id: llava:13b
+    provider: ollama
+    endpoint: http://localhost:11434
+    role: vision
+    contextTokens: 4096
+    local: true
+
+  # ---- Embeddings ----
+  - id: nomic-embed-text
+    provider: ollama
+    endpoint: http://localhost:11434
+    role: embedding
+    contextTokens: 8192
+    local: true
+
+  # ---- Optional cloud fallbacks (enabled when env keys are set) ----
+  - id: gpt-4o
+    provider: openai
+    endpoint: https://api.openai.com/v1
+    apiKeyEnv: OPENAI_API_KEY
+    role: reasoning
+    contextTokens: 128000
+    local: false
+
+  - id: claude-opus-4-6
+    provider: anthropic
+    endpoint: https://api.anthropic.com
+    apiKeyEnv: ANTHROPIC_API_KEY
+    role: reasoning
+    contextTokens: 200000
+    local: false
+
+router:
+  defaultReasoning: qwen2.5:72b
+  defaultFast: gemma2:9b
+  defaultEmbedding: nomic-embed-text
+  defaultVision: llava:13b
+  defaultAudio: whisper-1
+  preferLocal: true
+  # Fall through to a cloud model only when the task exceeds these thresholds.
+  cloudFallbackMinContext: 28000
+  cloudFallbackComplexity: 8
+
+memory:
+  sqlitePath: ./data/memory.db
+  # Hard cap on tokens the agent will show the model in one shot.
+  workingTokenBudget: 4000
+  # Default budget when a caller does not specify one on recall().
+  recallDefaultBudget: 1200
+  # Run memory consolidation every N turns.
+  consolidateEveryNTurns: 12
+  # Drop recalled items below this confidence.
+  confidenceFloor: 0.35
+
+proactive:
+  enabled: true
+  maxNudgesPerHour: 3
+  allowBackgroundResearch: true
+
+skills: {}

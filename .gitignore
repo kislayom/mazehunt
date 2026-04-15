@@ -1,2 +1,9 @@
-/target/
-/bin/
+target/
+*.class
+.idea/
+.vscode/
+*.iml
+data/
+*.db
+*.db-wal
+*.db-shm
