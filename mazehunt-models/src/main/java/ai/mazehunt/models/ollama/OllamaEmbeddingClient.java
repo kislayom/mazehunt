@@ -2,6 +2,8 @@ package ai.mazehunt.models.ollama;
 
 import ai.mazehunt.api.Modality;
 import ai.mazehunt.api.model.*;
+import ai.mazehunt.core.util.Http;
+import ai.mazehunt.core.util.Vectors;
 import ai.mazehunt.models.http.HttpJson;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -17,7 +19,7 @@ public final class OllamaEmbeddingClient implements EmbeddingClient, ModelClient
     private volatile int dims = -1;
 
     public OllamaEmbeddingClient(String endpoint, String model) {
-        this.endpoint = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        this.endpoint = Http.normaliseEndpoint(endpoint);
         this.model = model;
         this.capability = new ModelCapability(
                 model, "ollama", Set.of(Modality.TEXT), Set.of(Modality.EMBEDDING),
@@ -37,9 +39,7 @@ public final class OllamaEmbeddingClient implements EmbeddingClient, ModelClient
         JsonNode resp = HttpJson.post(endpoint + "/api/embeddings",
                 Map.of("model", model, "prompt", text == null ? "" : text),
                 Map.of(), Duration.ofSeconds(30));
-        JsonNode arr = resp.path("embedding");
-        float[] v = new float[arr.size()];
-        for (int i = 0; i < arr.size(); i++) v[i] = (float) arr.get(i).asDouble();
+        float[] v = Vectors.fromJsonArray(resp.path("embedding"));
         dims = v.length;
         return v;
     }

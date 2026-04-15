@@ -2,6 +2,8 @@ package ai.mazehunt.models.ollama;
 
 import ai.mazehunt.api.Modality;
 import ai.mazehunt.api.model.*;
+import ai.mazehunt.core.util.Http;
+import ai.mazehunt.core.util.Images;
 import ai.mazehunt.models.http.HttpJson;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -21,7 +23,7 @@ public final class OllamaClient implements ModelClient {
 
     public OllamaClient(String endpoint, String model, int contextTokens,
                         boolean vision, Map<String, Object> extraOptions) {
-        this.endpoint = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        this.endpoint = Http.normaliseEndpoint(endpoint);
         this.model = model;
         this.extraOptions = extraOptions == null ? Map.of() : extraOptions;
         Set<Modality> inputs = vision
@@ -38,13 +40,13 @@ public final class OllamaClient implements ModelClient {
         List<Map<String, Object>> msgs = new ArrayList<>();
         for (Message m : request.messages()) {
             Map<String, Object> jm = new LinkedHashMap<>();
-            jm.put("role", m.role().name().toLowerCase(Locale.ROOT));
+            jm.put("role", m.role().wire());
             StringBuilder text = new StringBuilder();
             List<String> images = new ArrayList<>();
             for (Message.Part p : m.parts()) {
                 if (p instanceof Message.TextPart tp) text.append(tp.text());
                 else if (p instanceof Message.ImagePart ip)
-                    images.add(Base64.getEncoder().encodeToString(ip.bytes()));
+                    images.add(Images.toBase64(ip.bytes()));
             }
             jm.put("content", text.toString());
             if (!images.isEmpty()) jm.put("images", images);

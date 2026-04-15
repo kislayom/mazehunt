@@ -8,7 +8,12 @@ import java.util.List;
  */
 public record Message(Role role, List<Part> parts) {
 
-    public enum Role { SYSTEM, USER, ASSISTANT, TOOL }
+    public enum Role {
+        SYSTEM, USER, ASSISTANT, TOOL;
+
+        /** Lower-case wire form used by Ollama / OpenAI / llama.cpp schemas. */
+        public String wire() { return name().toLowerCase(java.util.Locale.ROOT); }
+    }
 
     public sealed interface Part permits TextPart, ImagePart, AudioPart, ToolResultPart {}
 

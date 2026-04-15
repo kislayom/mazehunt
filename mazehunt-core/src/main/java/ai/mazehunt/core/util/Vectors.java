@@ -1,5 +1,7 @@
 package ai.mazehunt.core.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -23,6 +25,14 @@ public final class Vectors {
         ByteBuffer buf = ByteBuffer.allocate(v.length * 4).order(ByteOrder.LITTLE_ENDIAN);
         for (float f : v) buf.putFloat(f);
         return buf.array();
+    }
+
+    /** Decode a JSON numeric array into a dense float vector. */
+    public static float[] fromJsonArray(JsonNode arr) {
+        if (arr == null || !arr.isArray()) return new float[0];
+        float[] out = new float[arr.size()];
+        for (int i = 0; i < arr.size(); i++) out[i] = (float) arr.get(i).asDouble();
+        return out;
     }
 
     public static float[] fromBytes(byte[] bytes) {

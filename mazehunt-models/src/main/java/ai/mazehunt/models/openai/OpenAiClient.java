@@ -2,6 +2,8 @@ package ai.mazehunt.models.openai;
 
 import ai.mazehunt.api.Modality;
 import ai.mazehunt.api.model.*;
+import ai.mazehunt.core.util.Http;
+import ai.mazehunt.core.util.Images;
 import ai.mazehunt.models.http.HttpJson;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -19,7 +21,7 @@ public final class OpenAiClient implements ModelClient {
     public OpenAiClient(String endpoint, String apiKey, String model,
                         int contextTokens, boolean vision,
                         double usdPerMInput, double usdPerMOutput) {
-        this.endpoint = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        this.endpoint = Http.normaliseEndpoint(endpoint);
         this.apiKey = apiKey;
         this.model = model;
         Set<Modality> inputs = vision
@@ -36,15 +38,14 @@ public final class OpenAiClient implements ModelClient {
         List<Map<String, Object>> msgs = new ArrayList<>();
         for (Message m : request.messages()) {
             Map<String, Object> jm = new LinkedHashMap<>();
-            jm.put("role", m.role().name().toLowerCase(Locale.ROOT));
+            jm.put("role", m.role().wire());
             List<Map<String, Object>> parts = new ArrayList<>();
             for (Message.Part p : m.parts()) {
                 if (p instanceof Message.TextPart tp) {
                     parts.add(Map.of("type", "text", "text", tp.text()));
                 } else if (p instanceof Message.ImagePart ip) {
-                    String b64 = Base64.getEncoder().encodeToString(ip.bytes());
-                    String url = "data:" + ip.mimeType() + ";base64," + b64;
-                    parts.add(Map.of("type", "image_url", "image_url", Map.of("url", url)));
+                    parts.add(Map.of("type", "image_url",
+                            "image_url", Map.of("url", Images.toDataUri(ip.bytes(), ip.mimeType()))));
                 }
             }
             jm.put("content", parts.size() == 1 && parts.get(0).get("type").equals("text")

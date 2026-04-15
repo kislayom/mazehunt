@@ -2,6 +2,8 @@ package ai.mazehunt.models.openai;
 
 import ai.mazehunt.api.Modality;
 import ai.mazehunt.api.model.*;
+import ai.mazehunt.core.util.Http;
+import ai.mazehunt.core.util.Vectors;
 import ai.mazehunt.models.http.HttpJson;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -17,7 +19,7 @@ public final class OpenAiEmbeddingClient implements EmbeddingClient, ModelClient
     private volatile int dims = -1;
 
     public OpenAiEmbeddingClient(String endpoint, String apiKey, String model) {
-        this.endpoint = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        this.endpoint = Http.normaliseEndpoint(endpoint);
         this.apiKey = apiKey;
         this.model = model;
         this.capability = new ModelCapability(model, "openai",
@@ -33,9 +35,7 @@ public final class OpenAiEmbeddingClient implements EmbeddingClient, ModelClient
         JsonNode resp = HttpJson.post(endpoint + "/embeddings",
                 Map.of("model", model, "input", text == null ? "" : text),
                 Map.of("authorization", "Bearer " + apiKey), Duration.ofSeconds(30));
-        JsonNode arr = resp.path("data").path(0).path("embedding");
-        float[] v = new float[arr.size()];
-        for (int i = 0; i < arr.size(); i++) v[i] = (float) arr.get(i).asDouble();
+        float[] v = Vectors.fromJsonArray(resp.path("data").path(0).path("embedding"));
         dims = v.length;
         return v;
     }
@@ -48,9 +48,7 @@ public final class OpenAiEmbeddingClient implements EmbeddingClient, ModelClient
         JsonNode data = resp.path("data");
         List<float[]> out = new ArrayList<>(data.size());
         for (JsonNode d : data) {
-            JsonNode arr = d.path("embedding");
-            float[] v = new float[arr.size()];
-            for (int i = 0; i < arr.size(); i++) v[i] = (float) arr.get(i).asDouble();
+            float[] v = Vectors.fromJsonArray(d.path("embedding"));
             dims = v.length;
             out.add(v);
         }

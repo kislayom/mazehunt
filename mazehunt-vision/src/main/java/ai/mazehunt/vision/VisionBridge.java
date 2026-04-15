@@ -4,6 +4,7 @@ import ai.mazehunt.api.model.Message;
 import ai.mazehunt.api.model.ModelClient;
 import ai.mazehunt.api.model.ModelRequest;
 import ai.mazehunt.core.router.ModelRouter;
+import ai.mazehunt.core.util.Mimes;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +23,8 @@ public final class VisionBridge {
 
     public String describe(Path imageFile, String instruction) {
         try {
-            return describe(Files.readAllBytes(imageFile), guessMime(imageFile), instruction);
+            return describe(Files.readAllBytes(imageFile),
+                    Mimes.imageMimeFromPath(imageFile), instruction);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -34,15 +36,8 @@ public final class VisionBridge {
                 new Message.TextPart(instruction == null
                         ? "Describe this image precisely; do not speculate beyond what is visible."
                         : instruction),
-                new Message.ImagePart(imageBytes, mimeType == null ? "image/png" : mimeType)));
+                new Message.ImagePart(imageBytes,
+                        mimeType == null ? Mimes.DEFAULT_IMAGE : mimeType)));
         return vm.complete(ModelRequest.of(List.of(msg))).text();
-    }
-
-    private static String guessMime(Path p) {
-        String n = p.getFileName().toString().toLowerCase();
-        if (n.endsWith(".jpg") || n.endsWith(".jpeg")) return "image/jpeg";
-        if (n.endsWith(".webp")) return "image/webp";
-        if (n.endsWith(".gif")) return "image/gif";
-        return "image/png";
     }
 }

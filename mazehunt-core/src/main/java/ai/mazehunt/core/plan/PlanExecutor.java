@@ -14,6 +14,8 @@ import ai.mazehunt.api.skill.SkillContext;
 import ai.mazehunt.api.skill.SkillResult;
 import ai.mazehunt.core.skill.SkillRegistry;
 import ai.mazehunt.core.util.Json;
+import ai.mazehunt.core.util.JsonExtract;
+import ai.mazehunt.core.util.TopoSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +51,9 @@ public final class PlanExecutor {
 
     public List<StepResult> execute(Plan plan, SkillContext ctx) {
         Map<String, StepResult> results = new LinkedHashMap<>();
-        for (String id : topoSort(plan)) {
-            PlanStep step = findStep(plan, id);
+        List<PlanStep> ordered = TopoSort.sort(plan.steps(), PlanStep::id, PlanStep::dependsOn);
+        for (PlanStep step : ordered) {
+            String id = step.id();
             Instant started = Instant.now();
             try {
                 Object out = runStep(step, results, ctx);
@@ -140,66 +143,15 @@ public final class PlanExecutor {
     private Object resolve(PlanStep.ValueRef ref, Map<String, StepResult> prior) {
         return switch (ref) {
             case PlanStep.ValueRef.Literal l    -> l.value();
-            case PlanStep.ValueRef.FromStep fs  -> extractPath(prior.get(fs.step()), fs.path());
+            case PlanStep.ValueRef.FromStep fs  -> extractFromStep(prior.get(fs.step()), fs.path());
             case PlanStep.ValueRef.FromMemory m -> memory.recall(RecallRequest.of(m.query(), 600));
             case PlanStep.ValueRef.FromUser u   -> askUser.apply(u.prompt());
         };
     }
 
-    private static Object extractPath(StepResult src, String path) {
-        if (src == null) return null;
-        if (src.status() != StepResult.Status.OK) return null;
-        Object v = src.output();
-        if (path == null || path.isEmpty()) return v;
-        // Very small JSONPath: dot-separated field access on Map / JsonNode.
-        for (String seg : path.split("\\.")) {
-            if (seg.isEmpty()) continue;
-            if (v instanceof Map<?, ?> map) v = map.get(seg);
-            else if (v instanceof com.fasterxml.jackson.databind.JsonNode n) v = n.path(seg);
-            else return v;
-        }
-        return v;
-    }
-
-    // ------------ topo sort ------------
-
-    private static List<String> topoSort(Plan plan) {
-        Map<String, List<String>> adj = new LinkedHashMap<>();
-        Map<String, Integer> indeg = new LinkedHashMap<>();
-        Map<String, PlanStep> byId = new LinkedHashMap<>();
-        for (PlanStep s : plan.steps()) {
-            byId.put(s.id(), s);
-            adj.putIfAbsent(s.id(), new ArrayList<>());
-            indeg.putIfAbsent(s.id(), 0);
-        }
-        for (PlanStep s : plan.steps()) {
-            for (String d : s.dependsOn()) {
-                if (!byId.containsKey(d)) continue;
-                adj.get(d).add(s.id());
-                indeg.merge(s.id(), 1, Integer::sum);
-            }
-        }
-        Deque<String> q = new ArrayDeque<>();
-        indeg.forEach((k, v) -> { if (v == 0) q.add(k); });
-        List<String> out = new ArrayList<>();
-        while (!q.isEmpty()) {
-            String cur = q.poll();
-            out.add(cur);
-            for (String next : adj.get(cur)) {
-                if (indeg.merge(next, -1, Integer::sum) == 0) q.add(next);
-            }
-        }
-        if (out.size() != byId.size()) {
-            // Cycle — fall back to declaration order.
-            out.clear();
-            for (PlanStep s : plan.steps()) out.add(s.id());
-        }
-        return out;
-    }
-
-    private static PlanStep findStep(Plan plan, String id) {
-        for (PlanStep s : plan.steps()) if (s.id().equals(id)) return s;
-        throw new NoSuchElementException(id);
+    private static Object extractFromStep(StepResult src, String path) {
+        if (src == null || src.status() != StepResult.Status.OK) return null;
+        return JsonExtract.path(src.output(), path);
     }
 
     /** Thrown by a step to indicate grounded-fact-missing → surface as UNKNOWN. */

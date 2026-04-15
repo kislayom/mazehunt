@@ -4,8 +4,11 @@ import ai.mazehunt.api.model.ToolSpec;
 import ai.mazehunt.api.skill.Skill;
 import ai.mazehunt.api.skill.SkillContext;
 import ai.mazehunt.api.skill.SkillResult;
+import ai.mazehunt.core.util.Numbers;
 
 import java.util.*;
+
+import static ai.mazehunt.core.util.Numbers.*;
 
 /**
  * Value-investing evaluator inspired by Warren Buffett's stated heuristics.
@@ -109,11 +112,11 @@ public final class BuffettStockAnalysisSkill implements Skill {
         if (eps.length >= 3) {
             boolean anyNeg = false;
             for (double v : eps) if (v < 0) { anyNeg = true; break; }
-            double cagr = cagr(eps);
+            double epsCagr = Numbers.cagr(eps);
             if (anyNeg) concerns.add("Loss-making year in EPS history");
-            if (cagr > 0.07) strengths.add("EPS CAGR " + pct(cagr));
-            else if (!Double.isNaN(cagr)) concerns.add("Slow EPS growth (" + pct(cagr) + ")");
-            result.put("epsCAGR", cagr);
+            if (epsCagr > 0.07) strengths.add("EPS CAGR " + pct(epsCagr));
+            else if (!Double.isNaN(epsCagr)) concerns.add("Slow EPS growth (" + pct(epsCagr) + ")");
+            result.put("epsCAGR", epsCagr);
             result.put("epsLossYears", anyNeg);
         } else unknowns.add("epsHistory");
 
@@ -125,8 +128,8 @@ public final class BuffettStockAnalysisSkill implements Skill {
             if (avgEarnings > 0) {
                 double ratio = ltDebt / avgEarnings;
                 result.put("debtToAvgEarnings", ratio);
-                if (ratio <= 5) strengths.add("LT-debt ≤ 5× avg earnings (" + round(ratio) + "×)");
-                else concerns.add("LT-debt > 5× avg earnings (" + round(ratio) + "×)");
+                if (ratio <= 5) strengths.add("LT-debt ≤ 5× avg earnings (" + round2(ratio) + "×)");
+                else concerns.add("LT-debt > 5× avg earnings (" + round2(ratio) + "×)");
             }
         } else if (ltDebt == null) unknowns.add("longTermDebt");
 
@@ -134,8 +137,8 @@ public final class BuffettStockAnalysisSkill implements Skill {
         Double cr = asDouble(a.get("currentRatio"));
         if (cr != null) {
             result.put("currentRatio", cr);
-            if (cr >= 1.5) strengths.add("Current ratio ≥ 1.5 (" + round(cr) + ")");
-            else concerns.add("Current ratio below 1.5 (" + round(cr) + ")");
+            if (cr >= 1.5) strengths.add("Current ratio ≥ 1.5 (" + round2(cr) + ")");
+            else concerns.add("Current ratio below 1.5 (" + round2(cr) + ")");
         } else unknowns.add("currentRatio");
 
         // 5. Owner-earnings yield
@@ -201,23 +204,4 @@ public final class BuffettStockAnalysisSkill implements Skill {
         return npv / shares;
     }
 
-    // ---- numeric helpers ----
-
-    private static double[] toDoubles(Object raw) {
-        if (raw instanceof List<?> list) {
-            double[] v = new double[list.size()];
-            for (int i = 0; i < list.size(); i++) v[i] = ((Number) list.get(i)).doubleValue();
-            return v;
-        }
-        return new double[0];
-    }
-    private static Double asDouble(Object o) { return o instanceof Number n ? n.doubleValue() : null; }
-    private static double asDoubleOr(Object o, double d) { Double v = asDouble(o); return v == null ? d : v; }
-    private static double avg(double[] a) { if (a.length == 0) return Double.NaN; double s = 0; for (double d : a) s += d; return s / a.length; }
-    private static double cagr(double[] a) {
-        if (a.length < 2 || a[0] <= 0 || a[a.length - 1] <= 0) return Double.NaN;
-        return Math.pow(a[a.length - 1] / a[0], 1.0 / (a.length - 1)) - 1.0;
-    }
-    private static String pct(double d) { return String.format(Locale.ROOT, "%.1f%%", d * 100); }
-    private static String round(double d) { return String.format(Locale.ROOT, "%.2f", d); }
 }

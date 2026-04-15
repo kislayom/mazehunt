@@ -7,6 +7,7 @@ import ai.mazehunt.api.plan.Plan;
 import ai.mazehunt.api.plan.PlanStep;
 import ai.mazehunt.core.skill.SkillRegistry;
 import ai.mazehunt.core.util.Json;
+import ai.mazehunt.core.util.JsonExtract;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +69,7 @@ public final class Planner {
         try {
             String raw = model.complete(ModelRequest.of(List.of(
                     Message.system(system), Message.user(user)))).text();
-            String json = extractJson(raw);
-            return parse(goal, json);
+            return parse(goal, JsonExtract.extractObject(raw));
         } catch (RuntimeException e) {
             log.warn("Planner fallback (reason: {})", e.toString());
             return fallback(goal);
@@ -84,14 +84,6 @@ public final class Planner {
                 Map.of("goal", new PlanStep.ValueRef.Literal(goal)),
                 List.of(), "");
         return new Plan(goal, List.of(only), "answer");
-    }
-
-    private static String extractJson(String raw) {
-        if (raw == null) return "{}";
-        int start = raw.indexOf('{');
-        int end = raw.lastIndexOf('}');
-        if (start < 0 || end <= start) return "{}";
-        return raw.substring(start, end + 1);
     }
 
     private static Plan parse(String goal, String json) {

@@ -1,5 +1,6 @@
 package ai.mazehunt.voice.whisper;
 
+import ai.mazehunt.core.util.Mimes;
 import ai.mazehunt.voice.Stt;
 
 import java.io.IOException;
@@ -43,21 +44,12 @@ public final class WhisperCppStt implements Stt {
     @Override
     public String transcribe(byte[] audioBytes, String mimeType) {
         try {
-            Path tmp = Files.createTempFile("mazehunt-", extFor(mimeType));
+            Path tmp = Files.createTempFile("mazehunt-", Mimes.audioExtension(mimeType));
             Files.write(tmp, audioBytes);
             try { return transcribe(tmp); }
             finally { Files.deleteIfExists(tmp); }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static String extFor(String mime) {
-        return switch (mime == null ? "" : mime) {
-            case "audio/wav", "audio/x-wav" -> ".wav";
-            case "audio/mpeg" -> ".mp3";
-            case "audio/ogg"  -> ".ogg";
-            default           -> ".bin";
-        };
     }
 }

@@ -2,6 +2,7 @@ package ai.mazehunt.models.llamacpp;
 
 import ai.mazehunt.api.Modality;
 import ai.mazehunt.api.model.*;
+import ai.mazehunt.core.util.Http;
 import ai.mazehunt.models.http.HttpJson;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -19,7 +20,7 @@ public final class LlamaCppClient implements ModelClient {
     private final ModelCapability capability;
 
     public LlamaCppClient(String endpoint, String model, int contextTokens) {
-        this.endpoint = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        this.endpoint = Http.normaliseEndpoint(endpoint);
         this.model = model;
         this.capability = new ModelCapability(
                 model, "llama.cpp", Set.of(Modality.TEXT), Set.of(Modality.TEXT),
@@ -32,9 +33,7 @@ public final class LlamaCppClient implements ModelClient {
     public ModelResponse complete(ModelRequest request) {
         List<Map<String, Object>> msgs = new ArrayList<>();
         for (Message m : request.messages()) {
-            msgs.add(Map.of(
-                    "role", m.role().name().toLowerCase(Locale.ROOT),
-                    "content", m.text()));
+            msgs.add(Map.of("role", m.role().wire(), "content", m.text()));
         }
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("model", model);

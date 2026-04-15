@@ -2,6 +2,8 @@ package ai.mazehunt.models.anthropic;
 
 import ai.mazehunt.api.Modality;
 import ai.mazehunt.api.model.*;
+import ai.mazehunt.core.util.Http;
+import ai.mazehunt.core.util.Images;
 import ai.mazehunt.models.http.HttpJson;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -18,7 +20,7 @@ public final class AnthropicClient implements ModelClient {
 
     public AnthropicClient(String endpoint, String apiKey, String model,
                            int contextTokens, double usdPerMInput, double usdPerMOutput) {
-        this.endpoint = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        this.endpoint = Http.normaliseEndpoint(endpoint);
         this.apiKey = apiKey;
         this.model = model;
         this.capability = new ModelCapability(
@@ -47,7 +49,7 @@ public final class AnthropicClient implements ModelClient {
                             "source", Map.of(
                                     "type", "base64",
                                     "media_type", ip.mimeType(),
-                                    "data", Base64.getEncoder().encodeToString(ip.bytes()))));
+                                    "data", Images.toBase64(ip.bytes()))));
                 }
             }
             msgs.add(Map.of(

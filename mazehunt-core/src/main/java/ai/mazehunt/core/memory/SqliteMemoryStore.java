@@ -1,6 +1,8 @@
 package ai.mazehunt.core.memory;
 
 import ai.mazehunt.api.memory.MemoryItem;
+import ai.mazehunt.core.util.Fts;
+import ai.mazehunt.core.util.Tags;
 import ai.mazehunt.core.util.Vectors;
 
 import java.nio.file.Files;
@@ -92,7 +94,7 @@ public final class SqliteMemoryStore implements AutoCloseable {
             ps.setString(2, item.tier().name());
             ps.setString(3, item.content());
             ps.setBytes(4, item.embedding() == null ? null : Vectors.toBytes(item.embedding()));
-            ps.setString(5, encodeTags(item.tags()));
+            ps.setString(5, Tags.encode(item.tags()));
             ps.setString(6, item.source());
             ps.setDouble(7, item.confidence());
             ps.setLong(8, item.createdAt().toEpochMilli());
@@ -124,7 +126,7 @@ public final class SqliteMemoryStore implements AutoCloseable {
             ORDER BY rank LIMIT ?
             """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, sanitizeFts(query));
+            ps.setString(1, Fts.sanitiseMatch(query));
             ps.setInt(2, limit);
             return collect(ps);
         } catch (SQLException e) {
@@ -201,7 +203,7 @@ public final class SqliteMemoryStore implements AutoCloseable {
                 MemoryItem.Tier.valueOf(rs.getString("tier")),
                 rs.getString("content"),
                 emb == null ? null : Vectors.fromBytes(emb),
-                decodeTags(rs.getString("tags")),
+                Tags.decode(rs.getString("tags")),
                 rs.getString("source"),
                 rs.getDouble("confidence"),
                 Instant.ofEpochMilli(rs.getLong("created_at")),
@@ -211,44 +213,4 @@ public final class SqliteMemoryStore implements AutoCloseable {
         );
     }
 
-    private static String encodeTags(Map<String, String> tags) {
-        if (tags == null || tags.isEmpty()) return null;
-        StringBuilder sb = new StringBuilder();
-        tags.forEach((k, v) -> {
-            if (sb.length() > 0) sb.append(';');
-            sb.append(k.replace(";", "")).append('=').append(v == null ? "" : v.replace(";", ""));
-        });
-        return sb.toString();
-    }
-
-    private static Map<String, String> decodeTags(String s) {
-        if (s == null || s.isEmpty()) return Map.of();
-        Map<String, String> out = new LinkedHashMap<>();
-        for (String piece : s.split(";")) {
-            int eq = piece.indexOf('=');
-            if (eq > 0) out.put(piece.substring(0, eq), piece.substring(eq + 1));
-        }
-        return out;
-    }
-
-    /** Strip characters that would break FTS5 query syntax. */
-    private static String sanitizeFts(String q) {
-        if (q == null) return "";
-        StringBuilder sb = new StringBuilder(q.length());
-        for (char c : q.toCharArray()) {
-            if (Character.isLetterOrDigit(c) || c == ' ' || c == '_' || c == '-') sb.append(c);
-            else sb.append(' ');
-        }
-        String cleaned = sb.toString().trim();
-        if (cleaned.isEmpty()) return "\"\"";
-        // Quote each term to avoid accidental operators.
-        String[] terms = cleaned.split("\\s+");
-        StringBuilder out = new StringBuilder();
-        for (String t : terms) {
-            if (t.length() < 2) continue;
-            if (out.length() > 0) out.append(" OR ");
-            out.append('"').append(t).append('"');
-        }
-        return out.length() == 0 ? "\"\"" : out.toString();
-    }
 }
