@@ -65,6 +65,21 @@ public final class MemoryDtos {
         }
     }
 
+    // ---- compaction ----
+    public record CompactRequestDto(List<MessageDto> messages, Integer maxTokens) {}
+    public record MessageDto(String role, String text) {}
+    public record CompactResponseDto(
+            boolean compacted,
+            String summary,
+            int messagesCompacted,
+            int inputTokens,
+            int outputTokens,
+            String skipReason
+    ) {}
+
+    // ---- verification / embedder info ----
+    public record EmbedderInfoDto(String type, int dimensions, String model) {}
+
     public record StatsResponseDto(Map<MemoryItem.Tier, Long> counts) {}
     public record HealthResponseDto(String status, long uptimeMs) {}
     public record ErrorResponseDto(String error) {}

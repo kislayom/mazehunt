@@ -32,6 +32,8 @@
         <junit.version>5.10.2</junit.version>
         <sqlite.version>3.46.0.0</sqlite.version>
         <snakeyaml.version>2.2</snakeyaml.version>
+        <onnxruntime.version>1.17.3</onnxruntime.version>
+        <djl.version>0.28.0</djl.version>
     </properties>
 
     <dependencyManagement>
@@ -86,6 +88,18 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.onnxruntime</groupId>
+                <artifactId>onnxruntime</artifactId>
+                <version>${onnxruntime.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>ai.djl.huggingface</groupId>
+                <artifactId>tokenizers</artifactId>
+                <version>${djl.version}</version>
+                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

@@ -4,16 +4,24 @@ import ai.mazehunt.api.memory.MemoryService;
 import ai.mazehunt.api.model.EmbeddingClient;
 import ai.mazehunt.api.model.ModelClient;
 import ai.mazehunt.memory.client.MemoryHttpClient;
+import ai.mazehunt.memory.compact.CompactionService;
+import ai.mazehunt.memory.embed.OnnxEmbedder;
 import ai.mazehunt.memory.store.InMemoryVectorIndex;
 import ai.mazehunt.memory.store.SqliteMemoryStore;
+import ai.mazehunt.memory.verify.FactVerifier;
 
 import java.nio.file.Path;
 import java.time.Duration;
 
 /**
- * One-stop construction for the memory tier. Call {@link #local} to embed the
- * memory inside the same JVM as the agent, or {@link #remote} to point at a
- * standalone memory service.
+ * One-stop construction for the memory tier. Picks between in-process
+ * ({@link #local}) and remote ({@link #remote}), and optionally wires:
+ *
+ * <ul>
+ *   <li>An in-process ONNX embedder (zero Ollama dependency for embeddings).</li>
+ *   <li>A {@link CompactionService} for mid-session context compaction.</li>
+ *   <li>A {@link FactVerifier} for self-healing memory recall.</li>
+ * </ul>
  */
 public final class MemoryFactory {
 
@@ -41,5 +49,30 @@ public final class MemoryFactory {
 
     public static MemoryService remote(String baseUrl, Duration timeout) {
         return new MemoryHttpClient(baseUrl, timeout);
+    }
+
+    /**
+     * Try to create an in-process ONNX embedder from a model directory.
+     * Returns {@code null} if ONNX Runtime isn't on the classpath or
+     * the model files aren't found — caller should fall back to Ollama.
+     */
+    public static EmbeddingClient onnxEmbedder(Path modelDir, int maxSeqLen) {
+        return OnnxEmbedder.tryCreate(modelDir, maxSeqLen);
+    }
+
+    /** Compaction service for mid-session context compression. */
+    public static CompactionService compaction(ModelClient model, MemoryService memory) {
+        if (model == null) return null;
+        return new CompactionService(model, memory);
+    }
+
+    /**
+     * Self-healing fact verifier. Verifies top-k recalled facts against
+     * live context before they enter the prompt.
+     */
+    public static FactVerifier verifier(ModelClient model, int maxFacts,
+                                        double outdatedPenalty, double unverifiablePenalty) {
+        if (model == null) return FactVerifier.passThrough();
+        return new FactVerifier(model, maxFacts, outdatedPenalty, unverifiablePenalty);
     }
 }
